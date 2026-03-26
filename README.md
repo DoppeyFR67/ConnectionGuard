@@ -142,7 +142,7 @@ Host is running
 
 ## Installation
 
-1. Install [MelonLoader](https://melonwiki.xyz/) for Schedule I (v0.6+ recommended)
+1. Install [MelonLoader](https://melonwiki.xyz/) for Schedule I (v0.7.0+ recommended)
 2. Download `ConnectionGuard.dll` from the [Releases](../../releases) page
 3. Drop the DLL into your `Schedule I/Mods/` folder
 4. Launch the game — ConnectionGuard loads automatically
