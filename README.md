@@ -4,11 +4,11 @@ A [MelonLoader](https://melonwiki.xyz/) mod for **Schedule I** that protects pla
 
 ## The Problem
 
-In Schedule I multiplayer, network hiccups and unstable connections can cause clients to lose their inventory and progress when they disconnect unexpectedly. The game's default behavior doesn't distinguish between a temporary network drop and the host intentionally leaving, often resulting in data loss even when the session is still active and rejoinable.
+Schedule I's multiplayer has several networking issues that go beyond simple disconnects. The game's code contains bugs like a crash from null payload packets being sent through Steam's networking layer, a race condition that fires a false "host exited" RPC when the host is still in the lobby, and an event handler leak where destroyed player objects keep receiving transport callbacks. On top of that, there are design gaps — the game doesn't distinguish between a temporary network drop and the host intentionally leaving, it doesn't keep live player state for reconnection recovery, and its default Steam networking timeouts are too aggressive for real-world connections. All of this adds up to lost inventory, false kicks, crashes, and a frustrating multiplayer experience.
 
 ## The Solution
 
-ConnectionGuard continuously captures snapshots of every remote player's state (inventory, appearance, clothing, variables) while the game is running. When a player reconnects after a network issue, the mod serves their most recent snapshot so they pick up right where they left off. It also monitors the Steam lobby to determine *why* a disconnection happened and shows the appropriate UI to the player.
+ConnectionGuard patches the game's networking code at runtime using Harmony to fix the underlying bugs and fill in the missing logic. It blocks null payload sends before they crash the Steam transport, suppresses false "host exited" RPCs by cross-referencing the actual Steam lobby membership, and cleans up stale event subscriptions on player destruction. Beyond bug fixes, it adds the infrastructure the game is missing: live in-memory snapshots of every remote player's state captured every 2 seconds, automatic restoration of that state on reconnect, periodic auto-saves, host presence monitoring via the Steam lobby, context-aware disconnect popups, and extended Steam networking timeouts to give connections time to recover.
 
 ## Base Game Issues Addressed
 
